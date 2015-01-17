@@ -12,6 +12,8 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6T7e95GO9dzP-pUALMwcE3wPU181lX1c">
     </script>
     <script type="text/javascript">
+      var myFirebaseRef = new Firebase("https://free4fee.firebaseio.com/");
+
       var style = [
         {
           stylers: [
@@ -41,7 +43,7 @@
       ];
 
       var trackermarker;
-      
+
 
       function initialize() {
         var mapOptions = {
