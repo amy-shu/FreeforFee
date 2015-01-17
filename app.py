@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, url_for
 from flask.ext.cors import CORS
+import requests
+
 app = Flask(__name__,static_url_path='')
 cors = CORS(app)
 
@@ -39,15 +41,27 @@ def recieveReply():
     else:
 	return 'yolo'
 
-@app.route('/sendpurchase',method=['GET','POST'])
+@app.route('/sendpurchase',methods=['GET','POST'])
 def sendpurchase():
+    seller = request.form['seller_name']
+    itemName = request.form['item_name']
+    pickupAddress = request.form['pickup_address']
+    phoneNum = request.form['pickup_phone_number']
+    notes = request.form['dropoff_notes']
+    buyer = request.form['buyer_name']
+    dropAddress = request.form['dropoff_address']
+    dropPhoneNum = request.form['dropoff_phone_number']
+    quoteId = request.form['quote_id']
+
+    payload = {'user':api_key,'pickup_name':seller,'manifest':itemName,'pickup_address':pickupAddres,'pickup_phone_number':phoneNum,'pickup_notes':notes,'dropoff_name':buyer,'dropoff_address':dropAddress,'dropoff_phone_number':dropPhoneNum,'dropoff_notes':notes,'quote_id':quoteId}
+    r = requests.post('https://api.postmates.com/v1/customers/'+cus_id+'/deliveries',params=payload)
     return 'done'
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
 import json
 from pygeocoder import Geocoder
 
-@app.route('/getquote/', methods=['GET','POST'])
+@app.route('/getquote', methods=['GET','POST'])
 def getquote():
     if request.method == 'POST':
         url = 'https://api.postmates.com/v1/customers/cus_KAe13l92WYA7fV/delivery_quotes'
