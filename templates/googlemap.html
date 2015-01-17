@@ -12,7 +12,7 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6T7e95GO9dzP-pUALMwcE3wPU181lX1c">
     </script>
     <script type="text/javascript">
-      var myFirebaseRef = new Firebase("https://free4fee.firebaseio.com/");
+      var myFirebaseRef = new Firebase("https://freeforfee.firebaseio.com/");
 
       var style = [
         {
@@ -43,7 +43,7 @@
       ];
 
       var trackermarker;
-      
+
       function initialize() {
         var mapOptions = {
           center: { lat: 39.957663, lng: -75.190131},
@@ -59,6 +59,17 @@
         icon: 'http://google-maps-icons.googlecode.com/files/cycling.png',
         title:"Courier is on his way!"
         });
+
+        var contentString = 'Arriving in INSERT GET REQUEST HERE minutes';
+
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        google.maps.event.addListener(trackermarker, 'click', function() {
+          infowindow.open(map,marker);
+        });
+
       }
 
       /*function updateMarker() {
@@ -80,16 +91,7 @@
             marker.setPosition(LatLng);*/
          //});
 
-        var contentString = 'Arriving in INSERT GET REQUEST HERE minutes';
-
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString
-        });
-
-        google.maps.event.addListener(trackermarker, 'click', function() {
-          infowindow.open(map,marker);
-        });
-
+        
       google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
