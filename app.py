@@ -1,6 +1,11 @@
 from flask import Flask, render_template, request, url_for
+from flask.ext.cors import CORS
 app = Flask(__name__,static_url_path='')
+cors = CORS(app)
 
+
+cus_id = 'cus_KAcVLFvhNbupSF'
+api_key = 'c96b649c-d25d-465a-bffe-66546a32be58'
 
 @app.route('/')
 def index():
@@ -34,24 +39,37 @@ def recieveReply():
     else:
 	return 'yolo'
 
-
+@app.route('/sendpurchase',method=['GET','POST'])
+def sendpurchase():
+    return 'done'
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
-@app.route('/getquote', methods=['GET','POST'])
-def recieveReply():
+import json
+from pygeocoder import Geocoder
+
+@app.route('/getquote/', methods=['GET','POST'])
+def getquote():
     if request.method == 'POST':
-        #print request.form['event']
-        #do things with the form data
-        return 'done'
+        url = 'https://api.postmates.com/v1/customers/cus_KAe13l92WYA7fV/delivery_quotes'
+        headers = {'Authorization': 'Basic OGE3OWJmYzQtZmUxMS00OTRkLTg1ZjMtMzYyNmFjNGM5YTIzOg=='}
+        payload = {}
+        
+        lat = request.form['destLat']
+        lon = request.form['destLon']
+        payload['pickup_address'] = Geocoder.reverse_geocode(lat, lon)
+        payload["destination_address"] = request.form['destination_address']
+        r = requests.post(url, headers=headers, data=payload)
+        #do things with the form 
+
+        returnDict = json.loads(r.text)
+        return flask.jsonify(**returnDict)
     else:
         return 'HI DOE'
-
-
 
 #-------- EVERYTHING BELLOW IS FOR HIMANSHU----------
 @app.route('/map')
 def map():
     #DO POST REQUEST
-    lat = 40 
-    lon = -76
+    lat = 39.96 
+    lon = -75.2
     return render_template('googlemap.html', latitude=lat, longitude=lon)
