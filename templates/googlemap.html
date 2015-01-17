@@ -57,7 +57,7 @@
         position: new google.maps.LatLng({{latitude}}, {{longitude}}),
         map: map,
         icon: 'http://google-maps-icons.googlecode.com/files/cycling.png',
-        title:"Courier is on his way!"
+        title: "Courier is on his way!"
         });
 
         var contentString = 'Arriving in INSERT GET REQUEST HERE minutes';
@@ -67,7 +67,7 @@
         });
 
         google.maps.event.addListener(trackermarker, 'click', function() {
-          infowindow.open(map,marker);
+          infowindow.open(map,trackermarker);
         });
 
       }
