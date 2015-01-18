@@ -61,7 +61,7 @@ def sendpurchase():
 import json
 from pygeocoder import Geocoder
 
-@app.route('/getquote/', methods=['GET','POST'])
+@app.route('/getquote', methods=['GET','POST'])
 def getquote():
     if request.method == 'POST':
         url = 'https://api.postmates.com/v1/customers/cus_KAe13l92WYA7fV/delivery_quotes'
