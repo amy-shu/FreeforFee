@@ -56,13 +56,25 @@ def sendpurchase():
     return 'done'
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
-@app.route('/getquote', methods=['GET','POST'])
+import json
+from pygeocoder import Geocoder
 
-def getQuote():
+@app.route('/getquote/', methods=['GET','POST'])
+def getquote():
     if request.method == 'POST':
-        #print request.form['event']
-        #do things with the form data
-        return 'done'
+        url = 'https://api.postmates.com/v1/customers/cus_KAe13l92WYA7fV/delivery_quotes'
+        headers = {'Authorization': 'Basic OGE3OWJmYzQtZmUxMS00OTRkLTg1ZjMtMzYyNmFjNGM5YTIzOg=='}
+        payload = {}
+        
+        lat = request.form['destLat']
+        lon = request.form['destLon']
+        payload['pickup_address'] = Geocoder.reverse_geocode(lat, lon)
+        payload["destination_address"] = request.form['destination_address']
+        r = requests.post(url, headers=headers, data=payload)
+        #do things with the form 
+
+        returnDict = json.loads(r.text)
+        return flask.jsonify(**returnDict)
     else:
         return 'HI DOE'
 
