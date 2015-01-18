@@ -7,9 +7,9 @@ from requests.auth import HTTPBasicAuth
 app = Flask(__name__,static_url_path='')
 cors = CORS(app)
 
+cus_id = 'cus_KAe13l92WYA7fV'
+api_key = '8a79bfc4-fe11-494d-85f3-3626ac4c9a23'
 
-cus_id = 'cus_KAcVLFvhNbupSF'
-api_key = 'c96b649c-d25d-465a-bffe-66546a32be58'
 
 @app.route('/')
 def index():
@@ -45,19 +45,23 @@ def recieveReply():
 
 @app.route('/sendpurchase',methods=['GET','POST'])
 def sendpurchase():
-    seller = request.form['seller_name']
-    itemName = request.form['item_name']
-    pickupAddress = request.form['pickup_address']
-    phoneNum = request.form['pickup_phone_number']
-    notes = request.form['dropoff_notes']
-    buyer = request.form['buyer_name']
-    dropAddress = request.form['dropoff_address']
-    dropPhoneNum = request.form['dropoff_phone_number']
-    quoteId = request.form['quote_id']
+    payload = {}
 
-    payload = {'user':api_key,'pickup_name':seller,'manifest':itemName,'pickup_address':pickupAddress,'pickup_phone_number':phoneNum,'pickup_notes':notes,'dropoff_name':buyer,'dropoff_address':dropAddress,'dropoff_phone_number':dropPhoneNum,'dropoff_notes':notes,'quote_id':quoteId}
-    r = requests.post('https://api.postmates.com/v1/customers/'+cus_id+'/deliveries',params=payload)
-    return str(r)
+    payload['pickup_name'] = request.form['seller_name']
+    payload['manifest'] = request.form['item_name']
+    payload['pickup_address'] = request.form['pickup_address']
+    payload['pickup_phone_number'] = request.form['pickup_phone_number']
+    payload['dropoff_notes'] = request.form['dropoff_notes']
+    payload['dropoff_name'] = request.form['buyer_name']
+    payload['dropoff_address'] = request.form['dropoff_address']
+    payload['dropoff_phone_number'] = request.form['dropoff_phone_number']
+    payload['quote_id'] = request.form['quote_id']
+    
+    headers = {'Authorization': 'Basic ' + api_key + '=='}
+    headers = auth=(api_key,'')
+
+    r = requests.post('https://api.postmates.com/v1/customers/'+cus_id+'/deliveries',auth=headers,data=payload)
+    return str(r.json())
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
 import json
@@ -67,20 +71,20 @@ from pygeocoder import Geocoder
 def getquote():
     if request.method == 'POST':
         url = 'https://api.postmates.com/v1/customers/' + cus_id + '/delivery_quotes'
-        url = 'https://api.postmates.com/v1/customers/cus_KAe13l92WYA7fV/delivery_quotes'
 	headers = {'Authorization': 'Basic ' + api_key + '=='}
-	headers = auth=('8a79bfc4-fe11-494d-85f3-3626ac4c9a23','')
+	headers = auth=(api_key,'')
         payload = {}
         
         lat = request.form['destLat']
         lon = request.form['destLon']
-        payload['pickup_address'] = str(Geocoder.reverse_geocode(float(lat), float(lon)))
+        address = Geocoder.reverse_geocode(float(lat), float(lon))
+        payload['pickup_address'] = str(address)
         payload["dropoff_address"] = request.form['destination_address']
         r = requests.post(url, auth=headers, data=payload)
         #do things with the form 
 
         returnDict = json.loads(r.text)
-	#return str(headers)
+	#return str(address)
 	return jsonify(**returnDict)
     else:
         return 'HI DOE'
