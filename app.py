@@ -45,6 +45,7 @@ def sendpurchase():
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
 @app.route('/getquote', methods=['GET','POST'])
+
 def getQuote():
     if request.method == 'POST':
         #print request.form['event']
@@ -52,8 +53,6 @@ def getQuote():
         return 'done'
     else:
         return 'HI DOE'
-
-
 
 #-------- EVERYTHING BELLOW IS FOR HIMANSHU----------
 @app.route('/map')
