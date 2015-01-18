@@ -1,14 +1,25 @@
 from flask import Flask, render_template, request, url_for, jsonify
 from flask.ext.cors import CORS
 import requests
+from pymongo import MongoClient
+from datetime import datetime
 from requests.auth import HTTPBasicAuth
 
 
 app = Flask(__name__,static_url_path='')
 cors = CORS(app)
 
+<<<<<<< HEAD
 cus_id = 'cus_KAcVLFvhNbupSF'
 api_key = 'c96b649c-d25d-465a-bffe-66546a32be58'
+=======
+client = MongoClient('localhost', 27017)
+quotes_db = client.quotes_db
+collection = quotes_db.userInfo
+
+cus_id = 'cus_KAe13l92WYA7fV'
+api_key = '8a79bfc4-fe11-494d-85f3-3626ac4c9a23'
+>>>>>>> 55235b738e77eb8ca7e9b0dc5eca70b366231fca
 
 
 @app.route('/')
@@ -25,8 +36,10 @@ def test():
 
 @app.route('/random/<rString>')
 def displayString(rString):
-    origin = "asdasd"
-    destination = "Sasdssssssasd"
+    origin = "University of Pennsylvania Philadelphia, PA 19104"
+    destination = "21 N Juniper St Philadelphia, PA 19107"
+
+    print collection.find_one()
     return render_template('map2.html',
         origin = origin,
         destination = destination)
@@ -97,6 +110,9 @@ def sendpurchase():
 
 from pygeocoder import Geocoder
 
+def convertToDatetime(s):
+    return datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ')
+
 @app.route('/getquote', methods=['GET','POST'])
 def getquote():
     if request.method == 'POST':
@@ -113,10 +129,35 @@ def getquote():
         r = requests.post(url, auth=headers, data=payload)
         #do things with the form 
 
+        userID = request.form["id"]
+        kind = request.form["kind"]
+        fee = request.form["fee"]
+        created = convertToDatetime(request.form["created"])
+        expires = convertToDatetime(request.form["expires"])
+        currency = request.form["currency"]
+        duration = request.form["duration"]
+        dropoffEta = convertToDatetime(request.form["dropoff_eta"])
+
+        collection.update(
+            {"userID": userID},
+            {
+                "userID": userID,
+                "kind": kind,
+                "fee": fee,
+                "created": created, 
+                "expires": expires, 
+                "currency": currency, 
+                "duration": duration, 
+                "dropoffEta": dropoffEta
+            },
+            upsert=True
+        )
+
         returnDict = json.loads(r.text)
-	returnDict['dropoff_address'] = payload['dropoff_address']
-	#return str(address)
-	return jsonify(**returnDict)
+
+    	returnDict['dropoff_address'] = payload['dropoff_address']
+    	#return str(address)
+    	return jsonify(**returnDict)
     else:
         return 'HI DOE'
 
