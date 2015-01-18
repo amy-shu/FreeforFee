@@ -12,7 +12,7 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6T7e95GO9dzP-pUALMwcE3wPU181lX1c">
     </script>
     <script type="text/javascript">
-      var myFirebaseRef = new Firebase("https://freeforfee.firebaseio.com/");
+      var ref = new Firebase("https://freeforfee.firebaseio.com/id");
 
       var style = [
         {
@@ -71,7 +71,12 @@
         });
 
       }
-        
+
+      ref.child("{{delivery_id}}").on("value", function(snap){
+        trackermarker.setPosition( new google.maps.LatLng(snap.val().lat, snap.val().long));
+          
+      });
+
       google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
