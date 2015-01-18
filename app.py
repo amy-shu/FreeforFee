@@ -47,12 +47,14 @@ def sendpurchase():
     itemName = request.form['item_name']
     pickupAddress = request.form['pickup_address']
     phoneNum = request.form['pickup_phone_number']
-    notes = request.form['pickup_notes']
+    notes = request.form['dropoff_notes']
     buyer = request.form['buyer_name']
     dropAddress = request.form['dropoff_address']
+    dropPhoneNum = request.form['dropoff_phone_number']
+    quoteId = request.form['quote_id']
 
-    payload = {'user':api_key,'pickup_name':seller,'manifest':itemName,'pickup_address':pickupAddres,'pickup_phone_number':phoneNum,'pickup_notes':notes,'dropoff_name':buyer,'dropoff_address':dropAddress}
-#    r = requests.post('https://api.postmates.com/v1/customers/cus_abc123/deliveries')
+    payload = {'user':api_key,'pickup_name':seller,'manifest':itemName,'pickup_address':pickupAddres,'pickup_phone_number':phoneNum,'pickup_notes':notes,'dropoff_name':buyer,'dropoff_address':dropAddress,'dropoff_phone_number':dropPhoneNum,'dropoff_notes':notes,'quote_id':quoteId}
+    r = requests.post('https://api.postmates.com/v1/customers/'+cus_id+'/deliveries',params=payload)
     return 'done'
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
