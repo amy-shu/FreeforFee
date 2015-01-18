@@ -23,4 +23,3 @@ def sendEmail(messageText, receivingEmail, receivingName='Recipient'):
         }
         mandrill_client.messages.send(message=message, async=False, ip_pool='Main Pool')
 
-sendEmail('yo whatup','pav920@gmail.com')

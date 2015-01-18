@@ -23,8 +23,16 @@ def displayString(rString):
         destination = destination)
 
 #---------- EVERYTHING BELLOW IS FOR PAV-------------
+from mandrillUtils import sendEmail
 
-
+@app.route('/recievereply', methods=['GET','POST'])
+def recieveReply():
+    if request.method == 'POST':
+	#print request.form['event']
+    	sendEmail('Himanshu Hoe doe','pav920@gmail.com')
+        return 'done'
+    else:
+	return 'yolo'
 #-------- EVERYTHING BELLOW IS FOR HIMANSHU----------
 @app.route('/map')
 def map():
