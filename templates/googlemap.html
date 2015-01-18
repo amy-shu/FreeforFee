@@ -72,9 +72,9 @@
 
       }
 
-      ref.child("id").on("child_changed", function(snap){
+      ref.child("id").on("value", function(snap){
         alert("Value changed");
-        
+
         trackermarker.setPosition( new google.maps.LatLng(snap.lat, snap.long));
           
       });
