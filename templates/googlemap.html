@@ -7,6 +7,7 @@
 	#map-canvas{width:50%; height: 50%;}
     </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.1.1/firebase.js"></script>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6T7e95GO9dzP-pUALMwcE3wPU181lX1c">
     </script>
@@ -39,6 +40,9 @@
         }
       ];
 
+      var trackermarker;
+      
+
       function initialize() {
         var mapOptions = {
           center: { lat: 39.957663, lng: -75.190131},
@@ -48,7 +52,7 @@
         var map = new google.maps.Map(document.getElementById('map-canvas'),
             mapOptions);
 
-        var trackermarker = new google.maps.Marker({
+        trackermarker = new google.maps.Marker({
         position: new google.maps.LatLng({{latitude}}, {{longitude}}),
         map: map,
         icon: 'http://google-maps-icons.googlecode.com/files/cycling.png',
@@ -84,8 +88,6 @@
         google.maps.event.addListener(trackermarker, 'click', function() {
           infowindow.open(map,marker);
         });
-
-      
 
       google.maps.event.addDomListener(window, 'load', initialize);
 
