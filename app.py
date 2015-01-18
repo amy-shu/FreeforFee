@@ -7,8 +7,8 @@ from requests.auth import HTTPBasicAuth
 app = Flask(__name__,static_url_path='')
 cors = CORS(app)
 
-cus_id = 'cus_KAe13l92WYA7fV'
-api_key = '8a79bfc4-fe11-494d-85f3-3626ac4c9a23'
+cus_id = 'cus_KAcVLFvhNbupSF'
+api_key = 'c96b649c-d25d-465a-bffe-66546a32be58'
 
 
 @app.route('/')
@@ -35,10 +35,15 @@ def displayString(rString):
 from mandrillUtils import sendEmail
 import json
 
+def getDeliveryInfo(delivery_id):
+    headers = {'Authorization': 'Basic ' + api_key + '=='}
+    headers = auth=(api_key,'')
+    r = requests.get('https://api.postmates.com/v1/customers/'+cus_id+'/deliveries/'+delivery_id,auth=headers)
+    return r.json()
+
 @app.route('/recievereply', methods=['GET','POST'])
 def recieveReply():
     if request.method == 'POST':
-	#print request.form['event']
         emailText = str(json.loads(str(request.form['mandrill_events']))[0]['msg']['text'])
         from_email = str(json.loads(str(request.form['mandrill_events']))[0]['msg']['from_email'])
         address = emailText.split('\n')[0]
@@ -55,10 +60,14 @@ def recieveReply():
         headers = auth=(api_key,'')
         
         r = requests.post('https://api.postmates.com/v1/customers/'+cus_id+'/deliveries',auth=headers,data=payload)
-    	
+        	
         from firebase import firebase
-        firebase = firebase.FirebaseApplication('https://.firebaseio.com', None)
-
+        firebase = firebase.FirebaseApplication('https://freeforfee.firebaseio.com/id', None)
+        delivery_id = r.json()['id']
+        delivery_info = getDeliveryInfo(delivery_id)
+        lat = 0#delivery_info['courier']['location']['lat']
+        lon = 0#delivery_info['courier']['location']['lng']
+        firebase.post('id/'+delivery_id,{'lat':lat,'long':lon}) 
         sendEmail(str(r.json()),'pav920@gmail.com')
         return 'done'
     else:
