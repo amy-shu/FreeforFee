@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, url_for
 from flask.ext.cors import CORS
+import requests
+
 app = Flask(__name__,static_url_path='')
 cors = CORS(app)
 
@@ -41,6 +43,16 @@ def recieveReply():
 
 @app.route('/sendpurchase',method=['GET','POST'])
 def sendpurchase():
+    seller = request.form['seller_name']
+    itemName = request.form['item_name']
+    pickupAddress = request.form['pickup_address']
+    phoneNum = request.form['pickup_phone_number']
+    notes = request.form['pickup_notes']
+    buyer = request.form['buyer_name']
+    dropAddress = request.form['dropoff_address']
+
+    payload = {'user':api_key,'pickup_name':seller,'manifest':itemName,'pickup_address':pickupAddres,'pickup_phone_number':phoneNum,'pickup_notes':notes,'dropoff_name':buyer,'dropoff_address':dropAddress}
+#    r = requests.post('https://api.postmates.com/v1/customers/cus_abc123/deliveries')
     return 'done'
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
