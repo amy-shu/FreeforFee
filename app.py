@@ -1,10 +1,15 @@
 from flask import Flask, render_template, request, url_for
 from flask.ext.cors import CORS
 import requests
+from pymongo import MongoClient
+from datetime import datetime
 
 app = Flask(__name__,static_url_path='')
 cors = CORS(app)
 
+client = MongoClient('localhost', 27017)
+quotes_db = client.quotes_db
+collection = quotes_db.userInfo
 
 cus_id = 'cus_KAcVLFvhNbupSF'
 api_key = 'c96b649c-d25d-465a-bffe-66546a32be58'
@@ -25,6 +30,8 @@ def test():
 def displayString(rString):
     origin = "asdasd"
     destination = "Sasdssssssasd"
+
+    print collection.find_one()
     return render_template('map2.html',
         origin = origin,
         destination = destination)
@@ -61,6 +68,9 @@ def sendpurchase():
 import json
 from pygeocoder import Geocoder
 
+def convertToDatetime(s):
+    return datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ')
+
 @app.route('/getquote', methods=['GET','POST'])
 def getquote():
     if request.method == 'POST':
@@ -75,7 +85,32 @@ def getquote():
         r = requests.post(url, headers=headers, data=payload)
         #do things with the form 
 
+        userID = request.form["id"]
+        kind = request.form["kind"]
+        fee = request.form["fee"]
+        created = convertToDatetime(request.form["created"])
+        expires = convertToDatetime(request.form["expires"])
+        currency = request.form["currency"]
+        duration = request.form["duration"]
+        dropoffEta = convertToDatetime(request.form["dropoff_eta"])
+
+        collection.update(
+            {"userID": userID},
+            {
+                "userID": userID,
+                "kind": kind,
+                "fee": fee,
+                "created": created, 
+                "expires": expires, 
+                "currency": currency, 
+                "duration": duration, 
+                "dropoffEta", dropoffEta
+            },
+            upsert=True
+        )
+
         returnDict = json.loads(r.text)
+
         return flask.jsonify(**returnDict)
     else:
         return 'HI DOE'
