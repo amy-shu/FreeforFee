@@ -72,7 +72,7 @@
 
       }
 
-      ref.child("{{delivery_id}}").on("value", function(snap){
+      ref.child("id").on("value", function(snap){
         trackermarker.setPosition( new google.maps.LatLng(snap.val().lat, snap.val().long));
           
       });
