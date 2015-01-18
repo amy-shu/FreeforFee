@@ -1,7 +1,7 @@
 import mandrill
 
 
-def sendEmail(messageText, receivingEmail, receivingName='Recipient'):
+def sendEmail(messageText, receivingEmail, receivingName='Recipient',subject='Craigslist Request'):
         mandrill_client = mandrill.Mandrill('PsG4nAwAdNKbM8G8MymE1Q')
         message = {
         'auto_html': None,
@@ -15,7 +15,7 @@ def sendEmail(messageText, receivingEmail, receivingName='Recipient'):
         'merge_language': 'mailchimp',
         'merge_vars': [{'rcpt': 'recipient.email@example.com',
         'vars': [{'content': 'merge2 content', 'name': 'merge2'}]}],
-        'subject': 'CraigsList Request',
+        'subject': subject,
         'text': messageText,
         'to': [{'email': receivingEmail,
                 'name': receivingName,

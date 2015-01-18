@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, jsonify
 from flask.ext.cors import CORS
 import requests
+from requests.auth import HTTPBasicAuth
+
 
 app = Flask(__name__,static_url_path='')
 cors = CORS(app)
@@ -53,9 +55,9 @@ def sendpurchase():
     dropPhoneNum = request.form['dropoff_phone_number']
     quoteId = request.form['quote_id']
 
-    payload = {'user':api_key,'pickup_name':seller,'manifest':itemName,'pickup_address':pickupAddres,'pickup_phone_number':phoneNum,'pickup_notes':notes,'dropoff_name':buyer,'dropoff_address':dropAddress,'dropoff_phone_number':dropPhoneNum,'dropoff_notes':notes,'quote_id':quoteId}
+    payload = {'user':api_key,'pickup_name':seller,'manifest':itemName,'pickup_address':pickupAddress,'pickup_phone_number':phoneNum,'pickup_notes':notes,'dropoff_name':buyer,'dropoff_address':dropAddress,'dropoff_phone_number':dropPhoneNum,'dropoff_notes':notes,'quote_id':quoteId}
     r = requests.post('https://api.postmates.com/v1/customers/'+cus_id+'/deliveries',params=payload)
-    return 'done'
+    return str(r)
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
 import json
@@ -64,19 +66,22 @@ from pygeocoder import Geocoder
 @app.route('/getquote', methods=['GET','POST'])
 def getquote():
     if request.method == 'POST':
+        url = 'https://api.postmates.com/v1/customers/' + cus_id + '/delivery_quotes'
         url = 'https://api.postmates.com/v1/customers/cus_KAe13l92WYA7fV/delivery_quotes'
-        headers = {'Authorization': 'Basic OGE3OWJmYzQtZmUxMS00OTRkLTg1ZjMtMzYyNmFjNGM5YTIzOg=='}
+	headers = {'Authorization': 'Basic ' + api_key + '=='}
+	headers = auth=('8a79bfc4-fe11-494d-85f3-3626ac4c9a23','')
         payload = {}
         
         lat = request.form['destLat']
         lon = request.form['destLon']
-        payload['pickup_address'] = Geocoder.reverse_geocode(lat, lon)
-        payload["destination_address"] = request.form['destination_address']
-        r = requests.post(url, headers=headers, data=payload)
+        payload['pickup_address'] = str(Geocoder.reverse_geocode(float(lat), float(lon)))
+        payload["dropoff_address"] = request.form['destination_address']
+        r = requests.post(url, auth=headers, data=payload)
         #do things with the form 
 
         returnDict = json.loads(r.text)
-        return flask.jsonify(**returnDict)
+	#return str(headers)
+	return jsonify(**returnDict)
     else:
         return 'HI DOE'
 
