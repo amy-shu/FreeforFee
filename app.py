@@ -33,6 +33,21 @@ def recieveReply():
         return 'done'
     else:
 	return 'yolo'
+
+
+#---------EVERYTHING BELLOW IS FOR CHRIS-------------
+
+@app.route('/getquote', methods=['GET','POST'])
+def recieveReply():
+    if request.method == 'POST':
+        #print request.form['event']
+        #do things with the form data
+        return 'done'
+    else:
+        return 'HI DOE'
+
+
+
 #-------- EVERYTHING BELLOW IS FOR HIMANSHU----------
 @app.route('/map')
 def map():
