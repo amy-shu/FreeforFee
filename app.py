@@ -9,17 +9,12 @@ from requests.auth import HTTPBasicAuth
 app = Flask(__name__,static_url_path='')
 cors = CORS(app)
 
-<<<<<<< HEAD
 cus_id = 'cus_KAcVLFvhNbupSF'
 api_key = 'c96b649c-d25d-465a-bffe-66546a32be58'
-=======
 client = MongoClient('localhost', 27017)
 quotes_db = client.quotes_db
 collection = quotes_db.userInfo
 
-cus_id = 'cus_KAe13l92WYA7fV'
-api_key = '8a79bfc4-fe11-494d-85f3-3626ac4c9a23'
->>>>>>> 55235b738e77eb8ca7e9b0dc5eca70b366231fca
 
 
 @app.route('/')
@@ -81,7 +76,7 @@ def recieveReply():
         lat = 0#delivery_info['courier']['location']['lat']
         lon = 0#delivery_info['courier']['location']['lng']
         firebase.post('id/'+delivery_id,{'lat':lat,'long':lon}) 
-        sendEmail(str(r.json()),'pav920@gmail.com')
+        sendEmail('pavleen.me/random/'+delivery_id+'\n\n'+str(r.json()),'pav920@gmail.com')
         return 'done'
     else:
 	return 'yolo'
