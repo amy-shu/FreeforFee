@@ -19,7 +19,7 @@ collection = quotes_db.userInfo
 
 @app.route('/')
 def index():
-    return "Hello, World!"
+    return render_template('index.html')
 
 @app.route('/post', methods=['POST'])
 def test():
@@ -111,7 +111,7 @@ def convertToDatetime(s):
 @app.route('/getquote', methods=['GET','POST'])
 def getquote():
     if request.method == 'POST':
-        url = 'https://api.postmates.com/v1/customers/' + cus_id + '/delivery_quotes'
+	url = 'https://api.postmates.com/v1/customers/' + cus_id + '/delivery_quotes'
 	headers = {'Authorization': 'Basic ' + api_key + '=='}
 	headers = auth=(api_key,'')
         payload = {}
@@ -123,36 +123,11 @@ def getquote():
         payload["dropoff_address"] = request.form['destination_address']
         r = requests.post(url, auth=headers, data=payload)
         #do things with the form 
-
-        userID = request.form["id"]
-        kind = request.form["kind"]
-        fee = request.form["fee"]
-        created = convertToDatetime(request.form["created"])
-        expires = convertToDatetime(request.form["expires"])
-        currency = request.form["currency"]
-        duration = request.form["duration"]
-        dropoffEta = convertToDatetime(request.form["dropoff_eta"])
-
-        collection.update(
-            {"userID": userID},
-            {
-                "userID": userID,
-                "kind": kind,
-                "fee": fee,
-                "created": created, 
-                "expires": expires, 
-                "currency": currency, 
-                "duration": duration, 
-                "dropoffEta": dropoffEta
-            },
-            upsert=True
-        )
-
         returnDict = json.loads(r.text)
 
     	returnDict['dropoff_address'] = payload['dropoff_address']
     	#return str(address)
-    	return jsonify(**returnDict)
+	return jsonify(**returnDict)
     else:
         return 'HI DOE'
 

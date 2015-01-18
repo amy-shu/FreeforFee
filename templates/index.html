@@ -84,7 +84,7 @@
 
       }
 //
-      ref.child("{{ delivery_id }}").on("value", function(snap){
+      ref.child("default").on("value", function(snap){
         /*console.log(snap.numChildren());
         console.log(snap.child('/lat').val());
         console.log(snap.child('/long').val());*/
@@ -117,10 +117,10 @@
         <div class='col-md-4' style='height:100%;'>
           <div class='well'>
             <h3>
-              <span class='bold'>Origin: </span>{{ origin }}
+              Browse <span class='bold'>free items </span> on Craigslist, 
             </h3>
             <h3>
-              <span class='bold'>Destination: </span>{{ destination }}
+              and have the items <span class='bold'>delivered right to your door.</span>
             </h3>
           </div>
           
