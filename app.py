@@ -38,6 +38,7 @@ from mandrillUtils import sendEmail
 def recieveReply():
     if request.method == 'POST':
 	#print request.form['event']
+
     	sendEmail('Himanshu Hoe doe','pav920@gmail.com')
         return 'done'
     else:
@@ -46,21 +47,16 @@ def recieveReply():
 @app.route('/sendpurchase',methods=['GET','POST'])
 def sendpurchase():
     payload = {}
-
-    payload['pickup_name'] = request.form['seller_name']
     payload['manifest'] = request.form['item_name']
-    payload['pickup_address'] = request.form['pickup_address']
     payload['pickup_phone_number'] = request.form['pickup_phone_number']
     payload['dropoff_notes'] = request.form['dropoff_notes']
     payload['dropoff_name'] = request.form['buyer_name']
     payload['dropoff_address'] = request.form['dropoff_address']
     payload['dropoff_phone_number'] = request.form['dropoff_phone_number']
     payload['quote_id'] = request.form['quote_id']
-    
-    headers = {'Authorization': 'Basic ' + api_key + '=='}
-    headers = auth=(api_key,'')
-
-    r = requests.post('https://api.postmates.com/v1/customers/'+cus_id+'/deliveries',auth=headers,data=payload)
+    payload['seller_email'] = request.form['seller_email']
+    #save in mongo
+    sendEmail('Hi, \n    My name is '+payload['dropoff_name']+" and I would love to take the '"+payload['manifest']+"' off your hands! I'm using the Postmates delivery service to pick it up, and they will automatically read your email reply to this email. \n    If you're okay with letting  me pick up the item in your listing simply reply to this email with your address when you'll be arround in the next hour. The postmate guys will read the email and automatically send someone out to pick it up within an hour of when you reply.\n    But again if you reply only include your pickup address and nothing else! Thanks so much. Have a great day.\nSincerely,\n"+payload['dropoff_name'],payload['seller_email'])
     return str(r.json())
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
