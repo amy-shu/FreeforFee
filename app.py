@@ -38,15 +38,13 @@ def recieveReply():
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
 @app.route('/getquote', methods=['GET','POST'])
-def recieveReply():
+def getquote():
     if request.method == 'POST':
         #print request.form['event']
         #do things with the form data
         return 'done'
     else:
         return 'HI DOE'
-
-
 
 #-------- EVERYTHING BELLOW IS FOR HIMANSHU----------
 @app.route('/map')
