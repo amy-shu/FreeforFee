@@ -34,11 +34,14 @@ def recieveReply():
     else:
 	return 'yolo'
 
-
+@app.route('/sendpurchase',method=['GET','POST'])
+def sendpurchase():
+    return 'done'
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
 @app.route('/getquote', methods=['GET','POST'])
-def getquote():
+
+def getQuote():
     if request.method == 'POST':
         #print request.form['event']
         #do things with the form data
@@ -50,6 +53,6 @@ def getquote():
 @app.route('/map')
 def map():
     #DO POST REQUEST
-    lat = 40 
-    lon = -76
+    lat = 39.96 
+    lon = -75.2
     return render_template('googlemap.html', latitude=lat, longitude=lon)
