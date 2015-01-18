@@ -21,3 +21,12 @@ def displayString(rString):
     return render_template('map2.html',
         origin = origin,
         destination = destination)
+
+#-------- EVERYTHING BELLOW IS FOR HIMANSHU----------
+@app.route("/map")
+def map():
+    #DO POST REQUEST
+    lat = 40 
+    lon = -76
+
+    return render_template('googlemap.html', latitude=lat, longitude=lon)
