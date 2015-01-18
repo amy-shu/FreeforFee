@@ -43,6 +43,7 @@
       ];
 
       var trackermarker;
+      var contentString;
 
       function initialize() {
         var mapOptions = {
@@ -60,7 +61,7 @@
         title: "Courier is on his way!"
         });
 
-        var contentString = 'Arriving in INSERT GET REQUEST HERE minutes';
+        contentString = 'Arriving in INSERT GET REQUEST HERE minutes';
 
         var infowindow = new google.maps.InfoWindow({
             content: contentString
@@ -74,8 +75,9 @@
 
       ref.child("id").on("value", function(snap){
         alert("Value changed");
-
-        trackermarker.setPosition( new google.maps.LatLng(snap.lat, snap.long));
+        var data = snap.val();
+        contentString = data.status;
+        trackermarker.setPosition( new google.maps.LatLng(data.lat, data.long));
           
       });
 
