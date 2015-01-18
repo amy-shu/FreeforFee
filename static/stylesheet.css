@@ -27,3 +27,7 @@ span.glyphicon {
 	display: inline-block;
 	vertical-align: middle;
 }
+
+.bold {
+	font-family: "HelveticaNeue-Light", Helvetica, sans-serif;
+}

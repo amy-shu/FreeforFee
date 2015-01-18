@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, url_for, jsonify
 from flask.ext.cors import CORS
 import requests
-<<<<<<< HEAD
 from pymongo import MongoClient
 from datetime import datetime
-=======
 from requests.auth import HTTPBasicAuth
 
 
@@ -33,8 +31,8 @@ def test():
 
 @app.route('/random/<rString>')
 def displayString(rString):
-    origin = "asdasd"
-    destination = "Sasdssssssasd"
+    origin = "University of Pennsylvania Philadelphia, PA 19104"
+    destination = "21 N Juniper St Philadelphia, PA 19107"
 
     print collection.find_one()
     return render_template('map2.html',
@@ -136,20 +134,16 @@ def getquote():
                 "expires": expires, 
                 "currency": currency, 
                 "duration": duration, 
-                "dropoffEta", dropoffEta
+                "dropoffEta": dropoffEta
             },
             upsert=True
         )
 
         returnDict = json.loads(r.text)
-<<<<<<< HEAD
 
-        return flask.jsonify(**returnDict)
-=======
-	returnDict['dropoff_address'] = payload['dropoff_address']
-	#return str(address)
-	return jsonify(**returnDict)
->>>>>>> 3fa72f398506790e2a8410304fa2102f74613f9c
+    	returnDict['dropoff_address'] = payload['dropoff_address']
+    	#return str(address)
+    	return jsonify(**returnDict)
     else:
         return 'HI DOE'
 
