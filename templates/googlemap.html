@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Postmates Tracking</title>
+    <style type="text/css">
+      html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6T7e95GO9dzP-pUALMwcE3wPU181lX1c">
+    </script>
+    <script type="text/javascript">
+      var style = [
+        {
+          stylers: [
+            { hue: "#7FDBD4" },
+            { saturation: -20 }
+          ]
+        },{
+          featureType: "all",
+          stylers: [
+            { saturation: -80 }
+          ]
+        },{
+          featureType: "road.arterial",
+          elementType: "geometry",
+          stylers: [
+            { hue: "#00AFAB" },
+            { saturation: 80 }
+          ]
+        },{
+          featureType: "poi.business",
+          elementType: "labels",
+          stylers: [
+            { visibility: "on" },
+            { hue: "#7FDBD4"   }
+          ]
+        }
+      ];
+
+      function initialize() {
+        var mapOptions = {
+          center: { lat: 39.957663, lng: -75.190131},
+          zoom: 16,
+          styles: style
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+
+        var trackermarker = new google.maps.Marker({
+        position: new google.maps.LatLng({{latitude}}, {{longitude}}),
+        map: map,
+        icon: 'http://google-maps-icons.googlecode.com/files/cycling.png',
+        title:"Courier is on his way!"
+        });
+      }
+
+      setInterval(updateMarker,1000);
+
+      function updateMarker() {
+        var settings = {
+           url: 'https://api.postmates.com/v1/customers/cus_KAcVSnS865EW1F/delivery_quotes',
+           type: 'POST',
+           contentType: 'application/json',
+           crossDomain: true,
+           headers: {"X-Requested-With": "XMLHttpRequest"},
+           username: '81bddb07-275f-492a-9def-cda1fc08d60c',
+           success: function callback(){},
+           //error: callback
+        };
+
+        $.ajax(settings);
+         //$.post('https://api.postmates.com/v1/customers/cus_KAcVSnS865EW1F/deliveries',{}, function(json) {
+            //alert("REceived"+ajax.id);
+            /*var LatLng = new google.maps.LatLng(json.latitude, json.longitude);
+            marker.setPosition(LatLng);*/
+         //});
+
+        var contentString = 'Arriving in INSERT GET REQUEST HERE minutes';
+
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        google.maps.event.addListener(trackermarker, 'click', function() {
+          infowindow.open(map,marker);
+        });
+
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+<div id="map-canvas"></div>
+  </body>
+</html>
+
