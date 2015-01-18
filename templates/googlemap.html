@@ -61,7 +61,7 @@
         title: "Courier is on his way!"
         });
 
-        contentString = 'Arriving in INSERT GET REQUEST HERE minutes';
+        contentString = 'Arriving in ## minutes';
 
         var infowindow = new google.maps.InfoWindow({
             content: contentString
@@ -73,7 +73,7 @@
 
       }
 
-      ref.child("id").on("value", function(snap){
+      ref.child("id/del_KAhlDHPifxa5hk").on("value", function(snap){
         alert("Value changed");
         var data = snap.val();
         contentString = data.status;
