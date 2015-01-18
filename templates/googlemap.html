@@ -72,8 +72,8 @@
         });
 
       }
-
-      ref.child("id/del_KAhlDHPifxa5hk").on("value", function(snap){
+///del_KAhlDHPifxa5hk
+      ref.child("id").on("child_changed", function(snap){
         alert("Value changed");
         contentString = snap.status.val();
         trackermarker.setPosition( new google.maps.LatLng(snap.lat.val(), snap.long.val()));
