@@ -41,7 +41,7 @@ def recieveReply():
     else:
 	return 'yolo'
 
-@app.route('/sendpurchase',method=['GET','POST'])
+@app.route('/sendpurchase',methods=['GET','POST'])
 def sendpurchase():
     seller = request.form['seller_name']
     itemName = request.form['item_name']
