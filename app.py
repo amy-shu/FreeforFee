@@ -33,11 +33,11 @@ def test():
 def displayString(rString):
     origin = "University of Pennsylvania Philadelphia, PA 19104"
     destination = "21 N Juniper St Philadelphia, PA 19107"
-
     print collection.find_one()
     return render_template('map2.html',
         origin = origin,
-        destination = destination)
+        destination = destination,
+        delivery_id = rString)
 
 #---------- EVERYTHING BELLOW IS FOR PAV-------------
 from mandrillUtils import sendEmail
