@@ -44,6 +44,7 @@
 
       var trackermarker;
       var contentString;
+      var infowindow;
 
       function initialize() {
         var mapOptions = {
@@ -63,7 +64,7 @@
 
         contentString = 'Arriving in ## minutes';
 
-        var infowindow = new google.maps.InfoWindow({
+        infowindow = new google.maps.InfoWindow({
             content: contentString
         });
 
@@ -73,15 +74,18 @@
 
       }
 //
-      ref.child("id/del_KAhlDHPifxa5hk").on("value", function(snap){
-        alert(snap);
-        contentString = snap.status.val();
-        trackermarker.setPosition( new google.maps.LatLng(snap.lat.val(), snap.long.val()));
-          
+      ref.child("del_KAhlDHPifxa5hk").on("value", function(snap){
+        /*console.log(snap.numChildren());
+        console.log(snap.child('/lat').val());
+        console.log(snap.child('/long').val());*/
+        infowindow = new google.maps.InfoWindow({
+            content: 'Arriving in ## minutes. Status: ' + snap.child('/status').val()
+          });
+        trackermarker.setPosition( new google.maps.LatLng(snap.child('/lat').val(), snap.child('/long').val()));
+        
       });
 
       google.maps.event.addDomListener(window, 'load', initialize);
-
 
     </script>
   </head>
