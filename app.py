@@ -22,6 +22,9 @@ def displayString(rString):
         origin = origin,
         destination = destination)
 
+#---------- EVERYTHING BELLOW IS FOR PAV-------------
+
+
 #-------- EVERYTHING BELLOW IS FOR HIMANSHU----------
 @app.route('/map')
 def map():
