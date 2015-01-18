@@ -33,13 +33,33 @@ def displayString(rString):
 
 #---------- EVERYTHING BELLOW IS FOR PAV-------------
 from mandrillUtils import sendEmail
+import json
 
 @app.route('/recievereply', methods=['GET','POST'])
 def recieveReply():
     if request.method == 'POST':
 	#print request.form['event']
+        emailText = str(json.loads(str(request.form['mandrill_events']))[0]['msg']['text'])
+        from_email = str(json.loads(str(request.form['mandrill_events']))[0]['msg']['from_email'])
+        address = emailText.split('\n')[0]
+        
+        from pymongo import MongoClient
+        client = MongoClient()
+        db = client['postmates']
+        collection = db['deliveries']
+        payload = collection.find_one({"seller_email": from_email})
+        payload['pickup_address'] = address
+        payload['pickup_name']='Seller\'s home'
 
-    	sendEmail('Himanshu Hoe doe','pav920@gmail.com')
+        headers = {'Authorization': 'Basic ' + api_key + '=='}
+        headers = auth=(api_key,'')
+        
+        r = requests.post('https://api.postmates.com/v1/customers/'+cus_id+'/deliveries',auth=headers,data=payload)
+    	
+        from firebase import firebase
+        firebase = firebase.FirebaseApplication('https://.firebaseio.com', None)
+
+        sendEmail(str(r.json()),'pav920@gmail.com')
         return 'done'
     else:
 	return 'yolo'
@@ -55,12 +75,17 @@ def sendpurchase():
     payload['dropoff_phone_number'] = request.form['dropoff_phone_number']
     payload['quote_id'] = request.form['quote_id']
     payload['seller_email'] = request.form['seller_email']
+
+    from pymongo import MongoClient
+    client = MongoClient()
+    db = client['postmates']
+    collection = db['deliveries']
+    collection.insert(payload)
     #save in mongo
-    sendEmail('Hi, \n    My name is '+payload['dropoff_name']+" and I would love to take the '"+payload['manifest']+"' off your hands! I'm using the Postmates delivery service to pick it up, and they will automatically read your email reply to this email. \n    If you're okay with letting  me pick up the item in your listing simply reply to this email with your address when you'll be arround in the next hour. The postmate guys will read the email and automatically send someone out to pick it up within an hour of when you reply.\n    But again if you reply only include your pickup address and nothing else! Thanks so much. Have a great day.\nSincerely,\n"+payload['dropoff_name'],payload['seller_email'])
-    return str(r.json())
+    sendEmail('Hi, \n    My name is '+payload['dropoff_name']+" and I would love to take the '"+payload['manifest']+"' off your hands! I'm using the Postmates delivery service to pick it up, and they will automatically read your email reply to this email. \n\n    If you're okay with letting me pick up the item in your listing, simply reply to this email with only your address. Reply when you'll be arround in the next hour. \n\n    The postmate service will read the email and automatically send someone out to pick it up within an hour of when you reply.\n    Again, if you reply only include your pickup address and nothing else! Thanks so much. Have a great day.\nSincerely,\n"+payload['dropoff_name'],payload['seller_email'])
+    return 'done'
 #---------EVERYTHING BELLOW IS FOR CHRIS-------------
 
-import json
 from pygeocoder import Geocoder
 
 @app.route('/getquote', methods=['GET','POST'])
@@ -80,6 +105,7 @@ def getquote():
         #do things with the form 
 
         returnDict = json.loads(r.text)
+	returnDict['dropoff_address'] = payload['dropoff_address']
 	#return str(address)
 	return jsonify(**returnDict)
     else:
